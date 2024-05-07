@@ -1,12 +1,10 @@
-import React,{useEffect, useState} from 'react'
+import React from 'react'
 import { Link} from 'react-router-dom'
+import {useSelector}  from 'react-redux';
 
 const Nav = (props) => {
-  const [isLoggedIn,setLoggedIn] = useState(false);
-
-  useEffect(()=>{
-    setLoggedIn(props.loggedIn)
-  },[props.loggedIn])
+  
+  const isLoggedIn = useSelector(status=>status.admin.isLoggedIn)
   
   return (
     <div>

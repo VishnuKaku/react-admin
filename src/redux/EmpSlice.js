@@ -3,12 +3,17 @@ console.log('empSlice');
 const empSlice = createSlice({
     name: 'emp',
     initialState : { 
-        empObj: {firstName: 'Sonu', salary: 10.50}  
+        empObj: {firstName: 'Sonu', salary: 10.50}  ,
+        empList : []
     },
     reducers : { // more methods 
         setEmpObj : (state, action) => {
             console.log(action.payload);
             state.empObj = action.payload;
+        },
+
+        setEmpList : (state, action) =>{
+            state.empList = action.payload
         }
     }
 });
@@ -16,7 +21,7 @@ const empSlice = createSlice({
 console.log(empSlice.reducer)
 export default empSlice.reducer;
 
-export const {setEmpObj} = empSlice.actions;
+export const {setEmpObj,setEmpList} = empSlice.actions;
 
 
 

@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { setAdminId,setToken,setLoggedIn } from '../redux/AdminSlice';
+import {useDispatch} from 'react-redux'
 import {
   MDBBtn,
   MDBContainer,
@@ -19,6 +21,7 @@ function Login(props) {
   const navigate = useNavigate();
 
   const [loginData,setLoginData] = useState({username:'',password:''});
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,11 +29,16 @@ function Login(props) {
 
     try {
       const response = await axios.post('http://localhost:3001/login', loginData);
-      
+
       if(response.status===200){
-        props.setLoggedIn(true)
-        props.setAdminId(response.data.id)
-        props.setAuthToken(response.data.token)
+        // props.setLoggedIn(true)
+        // props.setAdminId(response.data.id)
+        // props.setAuthToken(response.data.token)
+        dispatch(setLoggedIn(true))
+        dispatch(setAdminId(response.data.id))
+        dispatch(setToken(response.data.token))
+       
+        
         navigate('/emplist')
       }
       else{

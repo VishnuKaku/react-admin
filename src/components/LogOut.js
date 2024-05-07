@@ -1,9 +1,14 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { MDBCarousel, MDBCarouselItem, MDBCarouselCaption } from 'mdb-react-ui-kit';
+import {useDispatch} from 'react-redux';
+import {setLoggedIn} from '../redux/AdminSlice'
+
 const LogOut = (props) => {
 
+  const dispatch = useDispatch();
+
   useEffect(()=>{
-    props.setLoggedIn(false);
+    dispatch(setLoggedIn(false))
   },[])
 
 

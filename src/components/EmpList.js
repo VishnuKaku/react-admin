@@ -1,10 +1,13 @@
-import React,{useEffect,useState} from 'react'
+import React,{useEffect,useState} from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
-import EmployeeService from '../services/EmployeeService'
+import EmployeeService from '../services/EmployeeService';
+import {useDispatch, useSelector} from 'react-redux';
+import { setEmpList } from '../redux/EmpSlice';
+
 
 const EmpList = () => {
 
@@ -12,14 +15,16 @@ const EmpList = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [updateData, setUpdateData] = useState({});
   const [selectedData,setSelectedData] = useState({});
-  const [data,setData] = useState([]);
   const [searchValue,setSearchValue] = useState('');
   const [searchedData,setSearchedData] = useState([]);
+
+  const data = useSelector(store=>store.emp.empList)
+  const dispatch = useDispatch();
 
   useEffect(()=>{
     // toast.success('Successfully Logged In')
       EmployeeService.getEmployees().then((resp)=>{
-        setData(resp);
+        dispatch(setEmpList(resp))
       }).catch((error)=>{
         toast.error(error.message)
       })
@@ -49,7 +54,7 @@ const EmpList = () => {
   const handleSubmit = () => {
     
     EmployeeService.updateEmployee(selectedData.employeeId,updateData).then((resp)=>{
-      setData(data.map(item => item.employeeId === selectedData.employeeId ? updateData : item));
+      dispatch(setEmpList(data.map(item => item.employeeId === selectedData.employeeId ? updateData : item)));
       console.log("Update Successfull")
       toast.success("Record Updated")
     }).catch((error)=>{
@@ -67,7 +72,7 @@ const EmpList = () => {
     const confirmDelete = ()=>{
 
       EmployeeService.deleteEmployee(selectedData.employeeId).then((resp)=>{
-        setData(data.filter(item => item.employeeId !== selectedData.employeeId));
+        dispatch(setEmpList(data.filter(item => item.employeeId !== selectedData.employeeId)));
         toast.success("Employee Deleted")
 
       }).catch((error)=>{

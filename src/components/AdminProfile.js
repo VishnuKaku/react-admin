@@ -7,6 +7,7 @@ import Modal from 'react-bootstrap/Modal';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import AdminService from '../services/AdminService';
+import {useSelector} from 'react-redux';
 
 const AdminProfile = (props) => {
 
@@ -15,9 +16,12 @@ const AdminProfile = (props) => {
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [updateData, setUpdateData] = useState({});
 
+  const adminId = useSelector(obj=>obj.admin.adminId);
+  const token = useSelector(obj=>obj.admin.token)
 
   useEffect(() => {
-      AdminService.getAdmin(props.adminId,props.authToken).then((resp)=>{
+      AdminService.getAdmin(adminId,token)
+      .then((resp)=>{
         setAdminData(resp)
       }).catch((error)=>{
         toast.error(error.response.data.message)
