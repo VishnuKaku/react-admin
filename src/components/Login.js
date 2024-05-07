@@ -26,12 +26,15 @@ function Login(props) {
 
     try {
       const response = await axios.post('http://localhost:3001/login', loginData);
-
+      
       if(response.status===200){
         props.setLoggedIn(true)
         props.setAdminId(response.data.id)
+        props.setAuthToken(response.data.token)
         navigate('/emplist')
-        console.log('Login successful. ', response.data);
+      }
+      else{
+        toast.error('Invalid credentials')
       }
       
     } catch (error) {

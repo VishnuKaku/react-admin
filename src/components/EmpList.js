@@ -1,10 +1,10 @@
 import React,{useEffect,useState} from 'react'
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import EmployeeService from '../services/EmployeeService'
 
 const EmpList = () => {
 
@@ -13,13 +13,16 @@ const EmpList = () => {
   const [updateData, setUpdateData] = useState({});
   const [selectedData,setSelectedData] = useState({});
   const [data,setData] = useState([]);
+  const [searchValue,setSearchValue] = useState('');
+  const [searchedData,setSearchedData] = useState([]);
 
   useEffect(()=>{
     // toast.success('Successfully Logged In')
-    axios.get('http://localhost:8081/emp/get-all-emps').then((resp)=>{
-        console.log(resp);
-        setData(resp.data);
-    })
+      EmployeeService.getEmployees().then((resp)=>{
+        setData(resp);
+      }).catch((error)=>{
+        toast.error(error.message)
+      })
     
 },[])
 
@@ -28,7 +31,6 @@ const EmpList = () => {
   const handleCloseDelete = () => setShowDeleteModal(false);
   
   const handleShow = (e) => {
-    console.log(e)
     setSelectedData(e)
     setUpdateData({
       employeeId:e.employeeId,
@@ -45,9 +47,13 @@ const EmpList = () => {
   }
 
   const handleSubmit = () => {
-    axios.put(`http://localhost:8081/emp/update-emp/${selectedData.employeeId}`,updateData).then((resp)=>{
-    console.log(resp.data)
-    setData(data.map(item => item.employeeId === selectedData.employeeId ? updateData : item));
+    
+    EmployeeService.updateEmployee(selectedData.employeeId,updateData).then((resp)=>{
+      setData(data.map(item => item.employeeId === selectedData.employeeId ? updateData : item));
+      console.log("Update Successfull")
+      toast.success("Record Updated")
+    }).catch((error)=>{
+      toast.error(error.message)
     })
     setShow(false);
     
@@ -59,16 +65,30 @@ const EmpList = () => {
     }
 
     const confirmDelete = ()=>{
-      axios.delete(`http://localhost:8081/emp/delete-emp/${selectedData.employeeId}`).then((resp)=>{
-            console.log(resp);
-            setData(data.filter(item => item.employeeId !== selectedData.employeeId));
-        })
+
+      EmployeeService.deleteEmployee(selectedData.employeeId).then((resp)=>{
+        setData(data.filter(item => item.employeeId !== selectedData.employeeId));
+        toast.success("Employee Deleted")
+
+      }).catch((error)=>{
+        toast.error(error.message)
+      })
         setShowDeleteModal(false);
     }
+
+    const handleSearchChange = (e)=>{
+      setSearchValue(e.target.value)
+    }
+
+    useEffect(() => {
+      setSearchedData(data.filter((emp) => emp.name.toLowerCase().startsWith(searchValue.toLowerCase())));
+    }, [searchValue]); 
 
   return (
     <>
         <h2>Employees:</h2>
+        <input className="form-control me-2" name='search' type="search" value={searchValue} placeholder="Search" aria-label="Search" onChange={handleSearchChange}></input>
+        {/* <input name='search' value={searchValue} placeholder='Search' onChange={handleSearchChange}/> */}
         <table className="table table-striped">
     <thead>
     <tr>
@@ -80,21 +100,28 @@ const EmpList = () => {
     </tr>
   </thead>
   <tbody>
-        {data.map((e)=>{
-            return( 
-  
-    <tr key={data.indexOf(e)+1}>
-      <th scope="row">{data.indexOf(e)+1}</th>
-      <td>{e.name}</td>
-      <td>{e.email}</td>
-      <td>{e.salary}</td>
-      <td>{e.aadhaar}</td>
-      <td><button className="btn btn-sm btn-danger" onClick={()=> removeItem(e.employeeId)}>Delete</button></td>
-      <td> <Button className='btn-sm' variant="primary" onClick={() => handleShow(e)}>Update</Button></td>
-    </tr>
-    
-        )})}
-        </tbody></table>
+  {searchValue ? searchedData.map((e) => (
+  <tr key={searchedData.indexOf(e) + 1}>
+    <th scope="row">{searchedData.indexOf(e) + 1}</th>
+    <td>{e.name}</td>
+    <td>{e.email}</td>
+    <td>{e.salary}</td>
+    <td>{e.aadhaar}</td>
+    <td><button className="btn btn-sm btn-danger" onClick={() => removeItem(e.employeeId)}>Delete</button></td>
+    <td><Button className='btn-sm' variant="primary" onClick={() => handleShow(e)}>Update</Button></td>
+  </tr>
+)) : data.map((e) => (
+  <tr key={data.indexOf(e) + 1}>
+    <th scope="row">{data.indexOf(e) + 1}</th>
+    <td>{e.name}</td>
+    <td>{e.email}</td>
+    <td>{e.salary}</td>
+    <td>{e.aadhaar}</td>
+    <td><button className="btn btn-sm btn-danger" onClick={() => removeItem(e.employeeId)}>Delete</button></td>
+    <td><Button className='btn-sm' variant="primary" onClick={() => handleShow(e)}>Update</Button></td>
+  </tr>
+))}
+</tbody></table>
         <Modal show={show} onHide={handleClose}  backdrop="static" keyboard={false}>
         <Modal.Header closeButton>
           <Modal.Title>Update Employee</Modal.Title>

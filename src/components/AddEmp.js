@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import axios from "axios"
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import EmployeeService from '../services/EmployeeService';
 
 const AddEmp = () => {
 
@@ -37,7 +37,7 @@ const AddEmp = () => {
         e.preventDefault()
         
        if(validateForm()){
-        axios.post('http://localhost:8081/emp/add-emp',employee).then((resp)=>{
+        EmployeeService.addEmployee(employee).then((resp)=>{
         toast.info('Record Created for: '+resp.data.name)
         setEmployee({name:'',email:'',salary:'',aadhaar:''})
         

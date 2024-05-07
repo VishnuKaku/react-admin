@@ -29,12 +29,12 @@ const Nav = (props) => {
       {isLoggedIn && <li className="nav-item">
         <Link className="nav-link" to={'/profile'}>Profile</Link>
       </li>}
-      {isLoggedIn && <li className="nav-item">
+      {/* {isLoggedIn && <li className="nav-item">
         <Link className="nav-link" to={'/parent'}>Parent</Link>
       </li>}
       {isLoggedIn && <li className="nav-item">
         <Link className="nav-link" to={'/child'}>Child</Link>
-      </li>}
+      </li>} */}
       {isLoggedIn && <li className="nav-item">
         <Link className="nav-link" to={'/logout'}>Log out</Link>
       </li>}

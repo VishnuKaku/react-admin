@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
 import { MDBCol, MDBBtn, MDBIcon, MDBContainer, MDBRow, MDBCard, MDBCardText, MDBCardBody, MDBCardImage, MDBTypography } from 'mdb-react-ui-kit';
 import './AdminProfile.css'
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import AdminService from '../services/AdminService';
 
 const AdminProfile = (props) => {
 
@@ -15,10 +17,13 @@ const AdminProfile = (props) => {
 
 
   useEffect(() => {
-    axios.get(`http://localhost:3001/adminProfile/${props.adminId}`).then((resp) => {
-      setAdminData(resp.data);
-    })
-  }, [props.adminId])
+      AdminService.getAdmin(props.adminId,props.authToken).then((resp)=>{
+        setAdminData(resp)
+      }).catch((error)=>{
+        toast.error(error.response.data.message)
+      })
+      
+  }, [props.adminId,props.authToken])
 
 
 
@@ -42,13 +47,15 @@ const AdminProfile = (props) => {
     setUpdateData({ ...updateData, [event.target.name]: event.target.value })
   }
 
-  const handleSubmit = () => {
-    
-    axios.put(`http://localhost:3001/adminProfile/${adminData._id}`, updateData).then((resp) => {
-    
+  const handleSubmit = async () => {
+
+    AdminService.updateAdmin(adminData._id,props.authToken,updateData).then((resp)=>{
       setAdminData({...adminData,...updateData})
-     
+    }).catch((error)=>{
+      toast.error(error.response.data.message)
     })
+    
+
     setShow(false) || setShowChangePassword(false)
 
   }
@@ -166,6 +173,7 @@ const AdminProfile = (props) => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <ToastContainer />
     </>
   )
 }
