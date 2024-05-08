@@ -28,7 +28,7 @@ function Login(props) {
 
 
     try {
-      const response = await axios.post('http://localhost:3001/login', loginData);
+        const response = await AdminService.login(loginData)
 
       if(response.status===200){
         // props.setLoggedIn(true)
