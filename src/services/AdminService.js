@@ -4,6 +4,19 @@ const BASE_URL = 'http://localhost:3001';
 
 const AdminService =  {
 
+    login : async (credentials) => {
+
+        try {
+            
+            const response = await axios.post('http://localhost:3001/login', credentials);
+            return response
+
+        } catch (error) {
+            
+            throw (error);
+        },
+
+
     getAdmin: async (adminId,token) =>{
         try {
             const resp = await axios.get(`${BASE_URL}/adminProfile/${adminId}`,{ headers: {
