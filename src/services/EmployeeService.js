@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = 'http://localhost:8081/emp';
+const BASE_URL = 'http://localhost:3001';
 
 const EmployeeService = {
 
@@ -43,12 +43,13 @@ const EmployeeService = {
     addEmployee: async (employee)=>{
 
         try {
-                const resp = await axios.post(`${BASE_URL}/add-emp`,employee)
-                return resp
+                const resp = await axios.post(`${BASE_URL}/register`,employee)
+                console.log(resp);
+                return resp.data
 
         } catch (error) {
-
-            throw new Error("Failed to Delete");
+            console.log(error);
+            throw new Error("Failed to add");
         }
     }
 }
