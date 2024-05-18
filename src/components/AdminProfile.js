@@ -53,7 +53,7 @@ const AdminProfile = (props) => {
 
   const handleSubmit = async () => {
 
-    AdminService.updateAdmin(adminData._id,props.authToken,updateData).then((resp)=>{
+    AdminService.updateAdmin(adminData.id,updateData).then((resp)=>{
       setAdminData({...adminData,...updateData})
     }).catch((error)=>{
       toast.error(error.response.data.message)

@@ -24,7 +24,7 @@ const AppRoutes = () => {
     <BrowserRouter>
     <Nav /> 
       <Routes>
-        {!isLoggedIn && <Route path='/login' element={<Login /> }></Route>}
+        {!isLoggedIn && <Route path='admin/login' element={<Login /> }></Route>}
         <Route path='/dashboard' Component={Dashboard}> </Route>
         
         {/* <Route path='/login' Component={Login}></Route> */}

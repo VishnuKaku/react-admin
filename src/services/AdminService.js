@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = 'http://localhost:3001';
+const BASE_URL = 'http://localhost:8090';
 
 const AdminService =  {
 
@@ -8,18 +8,19 @@ const AdminService =  {
 
         try {
             
-            const response = await axios.post('http://localhost:3001/login', credentials);
+            const response = await axios.post('http://localhost:8090/admin/login', credentials);
             return response
 
         } catch (error) {
             
             throw (error);
-        },
+        }
+    },
 
 
     getAdmin: async (adminId,token) =>{
         try {
-            const resp = await axios.get(`${BASE_URL}/adminProfile/${adminId}`,{ headers: {
+            const resp = await axios.get(`${BASE_URL}/admin/${adminId}`,{ headers: {
                 'Authorization': `Bearer ${token}`}
               })
               return resp.data;
@@ -28,11 +29,9 @@ const AdminService =  {
         }
     
     },
-    updateAdmin: async (adminId,token,updateData)=>{
+    updateAdmin: async (adminId,updateData)=>{
         try {
-            const resp = await axios.put(`http://localhost:3001/adminProfile/${adminId}`,updateData, { headers: {
-                'Authorization': `Bearer ${token}`},Body: updateData
-              })
+            const resp = await axios.put(`${BASE_URL}/admin/${adminId}`,updateData)
 
             return resp.data
 
@@ -43,5 +42,6 @@ const AdminService =  {
     }
   
 }
+
 
 export default AdminService

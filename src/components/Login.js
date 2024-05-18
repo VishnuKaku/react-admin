@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { setAdminId,setToken,setLoggedIn } from '../redux/AdminSlice';
 import {useDispatch} from 'react-redux'
+
 import {
   MDBBtn,
   MDBContainer,
@@ -13,6 +14,7 @@ import {
   MDBInput
 }
 from 'mdb-react-ui-kit';
+import AdminService from '../services/AdminService';
 
 
 function Login(props) {
@@ -74,7 +76,7 @@ function Login(props) {
             <p>Please login to your account</p>
 
 
-            <MDBInput wrapperClass='mb-4' label='Email address' id='form1' type='email' name='username' value={loginData.username} onChange={handleChange}/>
+            <MDBInput wrapperClass='mb-4' label='username' id='form1' type='username' name='username' value={loginData.username} onChange={handleChange}/>
             <MDBInput wrapperClass='mb-4' label='Password' id='form2' type='password' name='password' value={loginData.password} onChange={handleChange}/>
 
 
